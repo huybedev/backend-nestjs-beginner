@@ -7,20 +7,19 @@
 class Email {
   // Viết code
   email: string;
-  isSaved: boolean;
   createdAt: Date;
 
   constructor(email: string) {
+    if (!this.validateEmail(email)) {
+      throw new Error("invalid email format")
+    }
     this.email = email;
-    this.isSaved = true;
     this.createdAt = new Date();
   }
 
   private validateEmail(email: string): boolean {
-    if (!email.includes('@')) {
-      return false;
-    }
-    return true;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
   }
   isValid(): boolean {
     return this.validateEmail(this.email);
@@ -67,6 +66,7 @@ class BankAccount {
     if (amount > this.balance) {
       throw new Error("insufficient balance")
     }
+    this.balance -= amount;
   }
 }
 
@@ -87,9 +87,9 @@ class ShoppingCart {
   items: Item[] = [];
   totalPrice: number = 0;
 
-  constructor(items: [], totalPrice: number) {
-    this.items = items;
-    this.totalPrice = totalPrice;
+  constructor() {
+    this.items = [];
+    this.totalPrice = 0;
   }
 
   addItem({ name, price, quantity }: Item): void {
@@ -126,7 +126,7 @@ console.log("🚀 ~ bankAccount interest rate:", bankAccount.interestRate)
 console.log("🚀 ~ bankAccount:", bankAccount)
 
 
-const cart = new ShoppingCart([], 0)
+const cart = new ShoppingCart()
 cart.addItem({ name: "Phone1", price: 1000, quantity: 2 })
 console.log("🚀 ~ cart:", cart)
 cart.addItem({ name: "Phone2", price: 2000, quantity: 3 })
